@@ -23,7 +23,7 @@ nrf.set_auto_retransmit_count(0x00) # seting retransmits as 0 as running in whil
 nrf.set_address_width(0x03) #set address width as 5
 nrf.set_Channel_frequency(0x64) #setting channel frequency as 100 
 nrf_spi.read_nrf_reg("RF_CH")
-nrf.set_data_rate_power(nrf.RF_250kbps,PW_MAX) # two argument data rate and power
+nrf.set_data_rate_power(nrf.RF_250kbps,nrf.PW_MAX) # two argument data rate and power
 tx_addr = struct.pack("<BBBBB", 0x31,0x53,0x4e,0x53,0x52)#seting the same adress as receiver
 nrf.set_tx_addr(tx_addr)
 to_send = [0x10,0x00,0x00,0x00,0x00,0x00]#reading tx address    
