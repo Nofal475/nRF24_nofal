@@ -27,7 +27,7 @@ addr = struct.pack("<BBBBB",0x31,0x53,0x4e,0x53,0x52)
 nrf.set_rx_addr(1,addr)#check
 nrf.set_Channel_frequency(0x64)
 nrf_spi.read_nrf_reg("RF_CH")
-nrf.set_data_rate(0x21) # select data rat 250 kbps
+nrf.set_data_rate_power(nrf.RF_250kbps,PW_MAX)# takes two arguments data_rate and power 
 nrf.set_rx_pw(1,9)#check
 nrf_spi.flush_tx()#flush tx fifo
 nrf.en_rx_data_pipe(1)#check

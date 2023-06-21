@@ -60,7 +60,8 @@ class SPI:
             ("W_TX_PAYLOAD_NO_ACK",0xB0),#
             ("NOP",0xFF)#
         ]
-        self.reg_map = reg_map
+        self.reg_map = reg_map    
+      
     
     def NOP(self): #used to read status register
         to_send = [self.commands[10][1]]
@@ -150,6 +151,13 @@ class SPI:
 class NRF: 
     def __init__(self,spi):
         self.spi = spi  
+        self.PW_MIN = (00 << 1)
+        self.PW_LOW = (01 << 1)
+        self.PW_HIGH = (10 << 1)
+        self.PW_MAX = (11 << 1)
+        self.RF_250kbps = (100 << 3)    
+        self.RF_1Mbps = (000 << 3)     
+        self.RF_2Mbps = (001 << 3)  
   
     def configure_crc(self,value):
         self.spi.write_nrf_reg("CONFIG",value)#keep bit 1 to low as it is nrf power up bit
@@ -292,9 +300,12 @@ class NRF:
     def set_Channel_frequency(self,frequency_channel):
         self.spi.write_nrf_reg("RF_CH",frequency_channel) #bit 7 is always 0    
     
-    def set_data_rate(self,value):
-        #otherwise 00 - 1Mbps, 01 - 2Mbps, 10 - 250 kbps other value not allowed
-        self.spi.write_nrf_reg("RF_SETUP",value)
+    def set_data_rate_power(self,rate,power):
+        rf_set1 = self.spi.read_nrf_reg("RF_SETUP",value)
+        rf_set = rf_set1 & rate
+        rf_set &= power
+        rf_set |= rf_set1        
+        self.spi.write_nrf_reg("RF_SETUP",rf_set)
     
     def set_power_up(self):
         config = self.spi.read_nrf_reg("CONFIG")

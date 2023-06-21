@@ -20,10 +20,10 @@ nrf = NRF(nrf_spi)
 nrf.configure_crc(0x0c) # just setting all interrupts of irq as 0
 nrf.set_prim_rx_0() #setting nrf n transmit mode
 nrf.set_auto_retransmit_count(0x00) # seting retransmits as 0 as running in while loop 
-nrf.set_address_width(0x03) #set address width as 5 bytes
+nrf.set_address_width(0x03) #set address width as 5
 nrf.set_Channel_frequency(0x64) #setting channel frequency as 100 
 nrf_spi.read_nrf_reg("RF_CH")
-nrf.set_data_rate(0x21) # select data rat 250 kbps
+nrf.set_data_rate_power(nrf.RF_250kbps,PW_MAX) # two argument data rate and power
 tx_addr = struct.pack("<BBBBB", 0x31,0x53,0x4e,0x53,0x52)#seting the same adress as receiver
 nrf.set_tx_addr(tx_addr)
 to_send = [0x10,0x00,0x00,0x00,0x00,0x00]#reading tx address    
