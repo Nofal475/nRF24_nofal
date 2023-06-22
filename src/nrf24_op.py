@@ -4,6 +4,11 @@ import OPi.GPIO as GPIO
 from time import sleep
 import struct
 
+spi =spidev.SpiDev() ###establishing spi connection
+spi.open(1, 0)
+
+GPIO.setmode(GPIO.BOARD)###set ce pin as pin 22
+GPIO.setup(22, GPIO.OUT)
 
 ####this class is used for defining register map of nrf24####
 class reg_mapping:
@@ -151,13 +156,13 @@ class SPI:
 class NRF: 
     def __init__(self,spi):
         self.spi = spi  
-        self.PW_MIN = (00 << 1)
-        self.PW_LOW = (01 << 1)
-        self.PW_HIGH = (10 << 1)
-        self.PW_MAX = (11 << 1)
-        self.RF_250kbps = (100 << 3)    
-        self.RF_1Mbps = (000 << 3)     
-        self.RF_2Mbps = (001 << 3)  
+        self.PW_MIN = (0b00 << 1)
+        self.PW_LOW = (0b01 << 1)
+        self.PW_HIGH = (0b10 << 1)
+        self.PW_MAX = (0b11 << 1)
+        self.RF_250kbps = (0b100 << 3)    
+        self.RF_1Mbps = (0b000 << 3)     
+        self.RF_2Mbps = (0b001 << 3)  
   
     def configure_crc(self,value):
         self.spi.write_nrf_reg("CONFIG",value)#keep bit 1 to low as it is nrf power up bit
@@ -190,39 +195,39 @@ class NRF:
         if pipe_no == 0:
             to_send = [0x20|0x0A]+[int(value) for value in data]
             spi.xfer(to_send)	
-            to_send = [0x0B,0x00,0x00,0x00,0x00,0x00]#reading x address    
+            to_send = [0x0A,0x00,0x00,0x00,0x00,0x00]#reading x address    
             result = spi.xfer(to_send)[1:]
-            print(f"writte addr to pipe 0 = {result}"
+            print(f"writte addr to pipe 0 = {result}")
         elif pipe_no == 1:
             to_send = [0x20|0x0B]+[int(value) for value in data]
             spi.xfer(to_send)	
             to_send = [0x0B,0x00,0x00,0x00,0x00,0x00]#reading x address    
             result = spi.xfer(to_send)[1:]
-            print(f"writte addr to pipe 1 = {result}"
+            print(f"writte addr to pipe 1 = {result}")
         elif pipe_no == 2:
             to_send = [0x20|0x0C]+[int(value) for value in data]
             spi.xfer(to_send)	
-            to_send = [0x0B,0x00,0x00,0x00,0x00,0x00]#reading x address    
+            to_send = [0x0C,0x00,0x00,0x00,0x00,0x00]#reading x address    
             result = spi.xfer(to_send)[1:]
-            print(f"writte addr to pipe 0 = {result}" 
+            print(f"writte addr to pipe 0 = {result}" )
         elif pipe_no == 3:
             to_send = [0x20|0x0D]+[int(value) for value in data]
             spi.xfer(to_send)	
-            to_send = [0x0B,0x00,0x00,0x00,0x00,0x00]#reading x address    
+            to_send = [0x0D,0x00,0x00,0x00,0x00,0x00]#reading x address    
             result = spi.xfer(to_send)[1:]
-            print(f"writte addr to pipe 0 = {result}"
+            print(f"writte addr to pipe 0 = {result}")
         elif pipe_no == 4:
             to_send = [0x20|0x0E]+[int(value) for value in data]
             spi.xfer(to_send)	
-            to_send = [0x0B,0x00,0x00,0x00,0x00,0x00]#reading x address    
+            to_send = [0x0E,0x00,0x00,0x00,0x00,0x00]#reading x address    
             result = spi.xfer(to_send)[1:]
-            print(f"writte addr to pipe 0 = {result}"
+            print(f"writte addr to pipe 0 = {result}")
         elif pipe_no == 5:
             to_send = [0x20|0x0F]+[int(value) for value in data]
             spi.xfer(to_send)	
-            to_send = [0x0B,0x00,0x00,0x00,0x00,0x00]#reading x address    
+            to_send = [0x0F,0x00,0x00,0x00,0x00,0x00]#reading x address    
             result = spi.xfer(to_send)[1:]
-            print(f"writte addr to pipe 0 = {result}"                                                             
+            print(f"writte addr to pipe 0 = {result}" )                                                            
         else :
             print("pipe does not exist")
         
@@ -301,7 +306,7 @@ class NRF:
         self.spi.write_nrf_reg("RF_CH",frequency_channel) #bit 7 is always 0    
     
     def set_data_rate_power(self,rate,power):
-        rf_set1 = self.spi.read_nrf_reg("RF_SETUP",value)
+        rf_set1 = self.spi.read_nrf_reg("RF_SETUP")
         rf_set = rf_set1 & rate
         rf_set &= power
         rf_set |= rf_set1        

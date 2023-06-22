@@ -5,11 +5,6 @@ from time import sleep
 import struct
 from nrf_op import *
 
-spi =spidev.SpiDev() ###establishing spi connection
-spi.open(1, 0)
-
-GPIO.setmode(GPIO.BOARD)###set ce pin as pin 22
-GPIO.setup(22, GPIO.OUT)
 
 ####initializing classes####
 reg_map = reg_mapping() 
