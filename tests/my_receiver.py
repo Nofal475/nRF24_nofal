@@ -3,7 +3,7 @@ import spidev
 import OPi.GPIO as GPIO
 from time import sleep
 import struct
-from nrf_op import *
+from nrf24_op import *
 
 
 ####initializing classes####
