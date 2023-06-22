@@ -3,7 +3,7 @@ import spidev
 import OPi.GPIO as GPIO
 from time import sleep
 import struct
-from nrf_op import *
+from nrf24_op import *
 
 
 ####initializing classes####
@@ -21,12 +21,9 @@ nrf_spi.read_nrf_reg("RF_CH")
 nrf.set_data_rate_power(nrf.RF_250kbps,nrf.PW_MAX) # two argument data rate and power
 tx_addr = struct.pack("<BBBBB", 0x31,0x53,0x4e,0x53,0x52)#seting the same adress as receiver
 nrf.set_tx_addr(tx_addr)
-to_send = [0x10,0x00,0x00,0x00,0x00,0x00]#reading tx address    
-result = spi.xfer(to_send)[1:]
 nrf_spi.flush_tx()#flush tx fifo
 nrf_spi.write_nrf_reg("STATUS",0x10)# this disables max rt 
 nrf_spi.read_nrf_reg("STATUS")
-print(result)
 nrf.set_power_up()
 lat = 36.2222
 lng = 72.6789
@@ -39,3 +36,4 @@ while True:
     nrf_spi.read_nrf_reg("STATUS")
     print(f"count = {count}")
     count = count + 1
+    sleep(1)
